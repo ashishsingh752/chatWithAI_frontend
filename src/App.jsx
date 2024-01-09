@@ -1,7 +1,11 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "./components/Login";
+
 export default function App() {
-  return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-  )
+  return <BrowserRouter>
+  <Routes>
+     <Route path="/login" element={<Login/>}/>
+     <Route path="/login" element={<Registration/>}/>
+  </Routes>
+  </BrowserRouter>;
 }
