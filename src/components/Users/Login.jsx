@@ -3,7 +3,6 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 
-
 const validationSchema = Yup.object({
   email: Yup.string()
     .email("Enter a valid email")

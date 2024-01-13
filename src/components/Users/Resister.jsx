@@ -1,36 +1,62 @@
-import React from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// import StatusMessage from "../Alert/StatusMessage";
-
-// Validation schema
-const validationSchema = Yup.object({
-  email: Yup.string()
-    .email("Enter a valid email")
-    .required("Email is required"),
-  password: Yup.string().required("Password is required"),
-  username: Yup.string().required("Username is required"),
-});
 
 const Registration = () => {
+  const [formData, setFormData] = useState({});
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [successMessage, setSuccessMessage] = useState(null);
 
-  // Formik setup for form handling
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-      username: "",
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      // Here, handle the form submission
-      console.log("Form values", values);
-      // Simulate successful registration
-      navigate("/login"); // Redirect user to login page
-    },
-  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    // e.preventDefault();
+    try {
+      setLoading(true);
+      const res = await fetch("/api/v1/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        setError(data.message);
+      } else {
+        // Clear form data on successful submission
+        
+        // setFormData(() => ({}));  // its not working 
+     
+        setTimeout(() => {
+          setSuccessMessage(data.success)
+        }, 2000);
+
+        // setFormData({
+        //   formData:"",
+        // });  // its also not working 
+        
+        navigate('/login');
+      }
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+      // Clear error after 2 seconds
+      setTimeout(() => {
+        setError(null);
+      }, 2000);
+    }
+  };
+  
+  // console.log(formData);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
@@ -43,7 +69,7 @@ const Registration = () => {
           required.
         </p>
 
-        <form onSubmit={formik.handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Username input field */}
           <div>
             <label
@@ -55,13 +81,10 @@ const Registration = () => {
             <input
               type="text"
               id="username"
-              {...formik.getFieldProps("username")}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-indigo-500"
-              placeholder="John Doe"
+              placeholder="username"
+              onChange={handleChange}
             />
-            {formik.touched.username && formik.errors.username && (
-              <div className="text-red-500 mt-1">{formik.errors.username}</div>
-            )}
           </div>
 
           {/* Email input field */}
@@ -75,13 +98,10 @@ const Registration = () => {
             <input
               type="email"
               id="email"
-              {...formik.getFieldProps("email")}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-indigo-500"
-              placeholder="you@example.com"
+              placeholder="your@example.com"
+              onChange={handleChange}
             />
-            {formik.touched.email && formik.errors.email && (
-              <div className="text-red-500 mt-1">{formik.errors.email}</div>
-            )}
           </div>
 
           {/* Password input field */}
@@ -95,19 +115,16 @@ const Registration = () => {
             <input
               type="password"
               id="password"
-              {...formik.getFieldProps("password")}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-indigo-500"
+              onChange={handleChange}
             />
-            {formik.touched.password && formik.errors.password && (
-              <div className="text-red-500 mt-1">{formik.errors.password}</div>
-            )}
           </div>
-
           <button
+            disabled={loading}
             type="submit"
             className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Register
+            {loading ? "Loading" : "Register"}
           </button>
         </form>
         <div className="text-sm mt-2">
@@ -117,6 +134,10 @@ const Registration = () => {
           >
             Already have an account? Login
           </Link>
+        </div>
+        <div>
+          {error && <p className="text-red-400">{error}</p> }
+          {successMessage && <p className="text-green-400"> J</p> }
         </div>
       </div>
     </div>
