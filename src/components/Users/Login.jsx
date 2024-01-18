@@ -1,14 +1,20 @@
-import React from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { Link, useNavigate } from "react-router-dom";
+import React from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { Link, useNavigate } from 'react-router-dom';
+
+// Validation schema using Yup
 
 const validationSchema = Yup.object({
-  email: Yup.string()
-    .email("Enter a valid email")
-    .required("Email is required"),
-  password: Yup.string().required("Password is required"),
+  email: Yup.string().email("Enter a valid email").required("Email is required"),
+  password: Yup.string().min(6, "Password must be at least 6 characters").required("Enter the password"),
 });
+
+
+// const validationSchema = Yup.object({
+//   email: Yup.string().email('Enter a valid email').required('Email is required'),
+//   password: Yup.string().required('Password is required'),
+// });
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,15 +22,15 @@ const Login = () => {
   // Formik setup for form handling
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Here, you would typically handle form submission
       console.log(values);
       // Simulate login success and navigate to dashboard
-      navigate("/dashboard");
+      navigate('/dashboard');
     },
   });
 
@@ -48,7 +54,7 @@ const Login = () => {
             <input
               type="email"
               id="email"
-              {...formik.getFieldProps("email")}
+              {...formik.getFieldProps('email')}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-indigo-500"
               placeholder="you@example.com"
             />
@@ -68,7 +74,7 @@ const Login = () => {
             <input
               type="password"
               id="password"
-              {...formik.getFieldProps("password")}
+              {...formik.getFieldProps('password')}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-indigo-500"
             />
             {formik.touched.password && formik.errors.password && (
