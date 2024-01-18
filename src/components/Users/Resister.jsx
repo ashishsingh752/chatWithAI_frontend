@@ -1,35 +1,54 @@
 // Registration.jsx
-import React from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { Link, useNavigate } from 'react-router-dom';
-import StatusMessage from '../../alert/Status.message'; // Adjust the path based on your project structure
+import React from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { Link, useNavigate } from "react-router-dom";
+import StatusMessage from "../../alert/Status.message"; // Adjust the path based on your project structure
+import { useMutation } from "@tanstack/react-query";
+import { registerAPI } from "../../apis/user/user.api";
 
 // Validation schema
 const validationSchema = Yup.object({
-  email: Yup.string().email('Enter a valid email').required('Email is required'),
-  password: Yup.string().required('Password is required'),
-  username: Yup.string().required('Username is required'),
+  email: Yup.string()
+    .email("Enter a valid email")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+  username: Yup.string().required("Username is required"),
 });
 
 const Registration = () => {
   const navigate = useNavigate();
+  const mutation = useMutation({ mutationFn: registerAPI });
 
   // Formik setup for form handling
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
-      username: '',
+      email: "",
+      password: "",
+      username: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      // Here, handle the form submission
-      console.log('Form values', values);
-      // Simulate successful registration
-      navigate('/login'); // Redirect user to login page
+    onSubmit: async (values) => {
+      try {
+        // Here, handled the form submission
+        console.log("Form values", values);
+
+        await mutation.mutateAsync(values);
+
+        // The mutation has completed successfully
+        console.log("Mutation data", mutation.data);
+
+        // Simulate successful registration
+        navigate("/login"); // Redirect user to login page
+      } catch (error) {
+        // Handle errors, log or show an alert
+        console.error("Mutation error", error);
+      }
     },
   });
+  console.log(mutation);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
@@ -38,8 +57,23 @@ const Registration = () => {
           Create an Account
         </h2>
         <p className="text-center text-gray-600 mb-4">
-          Create an account to get free access for 3 days. No credit card required.
+          Create an account to get free access for 3 days. No credit card
+          required.
         </p>
+
+        {/* checking for the loading  */}
+        {mutation.isError && (
+          <StatusMessage
+            type="error"
+            message={mutation?.error?.response?.data?.message}
+          />
+        )}
+        {mutation.isSuccess && (
+          <StatusMessage type="success" message={mutation?.data?.message} />
+        )}
+        {mutation.isPending && (
+          <StatusMessage type="loading" message={"pending"} />
+        )}
 
         <form onSubmit={formik.handleSubmit} className="space-y-6">
           {/* Username input field */}
@@ -53,9 +87,9 @@ const Registration = () => {
             <input
               type="text"
               id="username"
-              {...formik.getFieldProps('username')}
+              {...formik.getFieldProps("username")}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-indigo-500"
-              placeholder="John Doe"
+              placeholder="Your Name"
             />
             {formik.touched.username && formik.errors.username && (
               <div className="text-red-500 mt-1">{formik.errors.username}</div>
@@ -73,9 +107,9 @@ const Registration = () => {
             <input
               type="email"
               id="email"
-              {...formik.getFieldProps('email')}
+              {...formik.getFieldProps("email")}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-indigo-500"
-              placeholder="you@example.com"
+              placeholder="your@example.com"
             />
             {formik.touched.email && formik.errors.email && (
               <div className="text-red-500 mt-1">{formik.errors.email}</div>
@@ -93,7 +127,7 @@ const Registration = () => {
             <input
               type="password"
               id="password"
-              {...formik.getFieldProps('password')}
+              {...formik.getFieldProps("password")}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-indigo-500"
             />
             {formik.touched.password && formik.errors.password && (

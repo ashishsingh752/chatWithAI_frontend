@@ -1,15 +1,21 @@
-import React from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { Link, useNavigate } from 'react-router-dom';
+import React from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { Link, useNavigate } from "react-router-dom";
+import StatusMessage from "../../alert/Status.message"; // Adjust the path based on your project structure
+import { useMutation } from "@tanstack/react-query";
+import { loginAPI } from "../../apis/user/user.api";
 
 // Validation schema using Yup
 
 const validationSchema = Yup.object({
-  email: Yup.string().email("Enter a valid email").required("Email is required"),
-  password: Yup.string().min(6, "Password must be at least 6 characters").required("Enter the password"),
+  email: Yup.string()
+    .email("Enter a valid email")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Enter the password"),
 });
-
 
 // const validationSchema = Yup.object({
 //   email: Yup.string().email('Enter a valid email').required('Email is required'),
@@ -18,21 +24,28 @@ const validationSchema = Yup.object({
 
 const Login = () => {
   const navigate = useNavigate();
+  const mutation = useMutation({ mutationFn: loginAPI });
+
 
   // Formik setup for form handling
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
+    onSubmit: async(values) => {
       // Here, you would typically handle form submission
       console.log(values);
+      await mutation.mutateAsync(values);
+      console.log("Mutation data", mutation.data);
+      // navigate("/login"); // Redirect user to login page
+
       // Simulate login success and navigate to dashboard
-      navigate('/dashboard');
+      // navigate("/dashboard");
     },
   });
+  console.log(mutation);
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center">
@@ -40,6 +53,20 @@ const Login = () => {
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">
           Login to Your Account
         </h2>
+
+        {/* checking for the loading  */}
+        {mutation.isError && (
+          <StatusMessage
+            type="error"
+            message={mutation?.error?.response?.data?.message}
+          />
+        )}
+        {mutation.isSuccess && (
+          <StatusMessage type="success" message={"Loggin successfull"} />
+        )}
+        {mutation.isPending && (
+          <StatusMessage type="loading" message={"pending"} />
+        )}
 
         {/* Form for login */}
         <form onSubmit={formik.handleSubmit} className="space-y-6">
@@ -54,7 +81,7 @@ const Login = () => {
             <input
               type="email"
               id="email"
-              {...formik.getFieldProps('email')}
+              {...formik.getFieldProps("email")}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-indigo-500"
               placeholder="you@example.com"
             />
@@ -74,7 +101,7 @@ const Login = () => {
             <input
               type="password"
               id="password"
-              {...formik.getFieldProps('password')}
+              {...formik.getFieldProps("password")}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-indigo-500"
             />
             {formik.touched.password && formik.errors.password && (
