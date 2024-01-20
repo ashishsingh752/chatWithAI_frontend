@@ -3,7 +3,7 @@ import { checkUserAuth } from "../../apis/user/user.api";
 import { useQuery } from "@tanstack/react-query"; //use to make the request(query) at the end point
 
 export const AuthContext = createContext();
-
+ 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
