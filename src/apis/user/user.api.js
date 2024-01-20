@@ -31,3 +31,27 @@ export const loginAPI = async (userData) => {
   );
   return response?.data;
 };
+
+
+// ----User Authentication
+export const checkUserAuth = async (userData) => {
+  const response = await axios.get(
+    "http://localhost:3000/api/v1/users/checkAuth",
+    {
+      withCredentials: true,
+    }
+  );
+  return response?.data;
+};
+
+// ----User logout
+export const logoutAPI = async () => {
+  const response = await axios.post(
+    "http://localhost:3000/api/v1/users/logout",
+    {},
+    {
+      withCredentials: true,
+    }
+  );
+  return response?.data;
+};

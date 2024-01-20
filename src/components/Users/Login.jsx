@@ -1,10 +1,11 @@
-import React from "react";
+import { React, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import StatusMessage from "../../alert/Status.message"; // Adjust the path based on your project structure
 import { useMutation } from "@tanstack/react-query";
 import { loginAPI } from "../../apis/user/user.api";
+import { useAuth } from "./Authcontext";
 
 // Validation schema using Yup
 
@@ -17,15 +18,12 @@ const validationSchema = Yup.object({
     .required("Enter the password"),
 });
 
-// const validationSchema = Yup.object({
-//   email: Yup.string().email('Enter a valid email').required('Email is required'),
-//   password: Yup.string().required('Password is required'),
-// });
-
 const Login = () => {
   const navigate = useNavigate();
   const mutation = useMutation({ mutationFn: loginAPI });
 
+  // destructuring the properties using the custom hook (useAuth)
+  const { login } = useAuth();
 
   // Formik setup for form handling
   const formik = useFormik({
@@ -34,18 +32,20 @@ const Login = () => {
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: async(values) => {
-      // Here, you would typically handle form submission
-      console.log(values);
-      await mutation.mutateAsync(values);
-      console.log("Mutation data", mutation.data);
-      // navigate("/login"); // Redirect user to login page
+    onSubmit: async (values) => {
+      // console.log(values);
 
+      await mutation.mutateAsync(values);
       // Simulate login success and navigate to dashboard
       // navigate("/dashboard");
     },
   });
-  console.log(mutation);
+  
+  useEffect(() => {
+    if (mutation.isSuccess) {
+      login();
+    }
+  }, [mutation.isSuccess]);
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center">

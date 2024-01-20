@@ -5,6 +5,9 @@ import { PlusIcon } from "@heroicons/react/20/solid";
 import { FiLogOut } from "react-icons/fi";
 import { FaCreativeCommonsShare } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { logoutAPI } from "../../apis/user/user.api";
+import { useMutation } from "@tanstack/react-query";
+import { useAuth } from "../Users/Authcontext";
 
 const user = {
   name: "your name",
@@ -21,8 +24,17 @@ function classNames(...classes) {
 }
 
 export default function PrivateNavbar() {
+  //custom hook
+  // const {logout} = useAuth();
+  // mutation
+  const mutation = useMutation({ mutationFn: logoutAPI });
+
   //handle logout
-  const handleLogout = () => {};
+  const {logout} = useAuth();
+  const handleLogout = () => {
+    mutation.mutate();
+    logout();
+  };
 
   return (
     // disclosure is used here for the better showing and hiding the content
