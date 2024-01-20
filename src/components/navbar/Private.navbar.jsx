@@ -4,11 +4,11 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import { FiLogOut } from "react-icons/fi";
 import { FaCreativeCommonsShare } from "react-icons/fa6";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const user = {
-  name: "Tom Cook",
-  email: "tom@example.com",
+  name: "your name",
+  email: "your@email.com",
 };
 const navigation = [
   { name: "Dashboard", href: "/dashboard", current: true },
@@ -25,6 +25,7 @@ export default function PrivateNavbar() {
   const handleLogout = () => {};
 
   return (
+    // disclosure is used here for the better showing and hiding the content
     <Disclosure as="nav" className="bg-gray-900">
       {({ open }) => (
         <>
