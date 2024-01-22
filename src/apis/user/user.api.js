@@ -16,7 +16,6 @@ export const registerAPI = async (userData) => {
   return response?.data;
 };
 
-
 // ----User loin
 export const loginAPI = async (userData) => {
   const response = await axios.post(
@@ -31,7 +30,6 @@ export const loginAPI = async (userData) => {
   );
   return response?.data;
 };
-
 
 // ----User Authentication
 export const checkUserAuth = async (userData) => {
@@ -49,6 +47,17 @@ export const logoutAPI = async () => {
   const response = await axios.post(
     "http://localhost:3000/api/v1/users/logout",
     {},
+    {
+      withCredentials: true,
+    }
+  );
+  return response?.data;
+};
+
+// ----User history
+export const getUserProfile = async () => {
+  const response = await axios.get(
+    "http://localhost:3000/api/v1/users/profile",
     {
       withCredentials: true,
     }

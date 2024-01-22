@@ -3,10 +3,9 @@ import { checkUserAuth } from "../../apis/user/user.api";
 import { useQuery } from "@tanstack/react-query"; //use to make the request(query) at the end point
 
 export const AuthContext = createContext();
- 
+
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
   // making  the query
   const { isError, isLoading, data, isSuccess } = useQuery({
     queryFn: checkUserAuth,
@@ -15,9 +14,9 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      setIsAuthenticated(true);
+      setIsAuthenticated(data);
     }
-  }, [isSuccess]);
+  }, [data, isSuccess]);
 
   const login = () => {
     setIsAuthenticated(true);

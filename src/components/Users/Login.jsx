@@ -11,19 +11,25 @@ import { useAuth } from "./Authcontext";
 
 const validationSchema = Yup.object({
   email: Yup.string()
-    .email("Enter a valid email")
-    .required("Email is required"),
+  .email("Enter a valid email")
+  .required("Email is required"),
   password: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Enter the password"),
+  .min(6, "Password must be at least 6 characters")
+  .required("Enter the password"),
 });
 
 const Login = () => {
-  const navigate = useNavigate();
-  const mutation = useMutation({ mutationFn: loginAPI });
-
   // destructuring the properties using the custom hook (useAuth)
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
+  console.log(isAuthenticated);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if(isAuthenticated)
+    navigate("/dashboard");
+  }, [isAuthenticated]);
+
+  const mutation = useMutation({ mutationFn: loginAPI });
 
   // Formik setup for form handling
   const formik = useFormik({
@@ -32,15 +38,17 @@ const Login = () => {
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: (values) => {
       // console.log(values);
-
-      await mutation.mutateAsync(values);
+      mutation.mutate(values);
       // Simulate login success and navigate to dashboard
-      // navigate("/dashboard");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000);
     },
   });
-  
+
+  // is successfull then call the login fucntion and make the authentication to the true
   useEffect(() => {
     if (mutation.isSuccess) {
       login();

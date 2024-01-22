@@ -15,13 +15,8 @@ export default function PublicNavbar() {
 
   return (
     <>
-<<<<<<< HEAD
-      <div className="bg-gray-900">
-      <header className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-=======
       <div className="bg-gray-900  ">
         <header className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
->>>>>>> a913e282adce582f4e8d88cd2f14f01493f44e21
           <nav
             className="flex items-center justify-between p-6 lg:px-8"
             aria-label="Global"

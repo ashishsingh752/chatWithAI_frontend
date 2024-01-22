@@ -1,13 +1,14 @@
 // Registration.jsx
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import StatusMessage from "../../alert/Status.message"; // Adjust the path based on your project structure
 import { useMutation } from "@tanstack/react-query";
 import { registerAPI } from "../../apis/user/user.api";
+import { useAuth } from "./Authcontext";
 
-// Validation schema
+//! Validation schema
 const validationSchema = Yup.object({
   email: Yup.string()
     .email("Enter a valid email")
@@ -20,7 +21,14 @@ const validationSchema = Yup.object({
 
 const Registration = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const mutation = useMutation({ mutationFn: registerAPI });
+
+  useEffect(() => {  //!--- if the use is logged in and try to register then redirecting to the dashboard 
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated]);
 
   // Formik setup for form handling
   const formik = useFormik({
@@ -30,25 +38,15 @@ const Registration = () => {
       username: "",
     },
     validationSchema: validationSchema,
-    onSubmit: async (values) => {
-      try {
-        // Here, handled the form submission
-        console.log("Form values", values);
-
-        await mutation.mutateAsync(values);
-
-        // The mutation has completed successfully
-        console.log("Mutation data", mutation.data);
-
-        // Simulate successful registration
-        navigate("/login"); // Redirect user to login page
-      } catch (error) {
-        // Handle errors, log or show an alert
-        console.error("Mutation error", error);
-      }
+    onSubmit: (values) => {
+      mutation.mutate(values);
+      // console.log("Mutation data", mutation.data);
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     },
   });
-  console.log(mutation);
+  // console.log(mutation);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">

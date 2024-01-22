@@ -5,7 +5,6 @@ import "./index.css";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
 import { AuthProvider } from "./components/Users/Authcontext.jsx";
-
 const root = document.getElementById("root");
 const queryClient = new QueryClient();
 

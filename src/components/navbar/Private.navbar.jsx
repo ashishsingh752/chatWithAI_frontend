@@ -25,19 +25,10 @@ function classNames(...classes) {
 
 export default function PrivateNavbar() {
   //custom hook
-<<<<<<< HEAD
-  // const {logout} = useAuth();
-=======
-  const {logout} = useAuth();
->>>>>>> a913e282adce582f4e8d88cd2f14f01493f44e21
+  const { logout } = useAuth();
   // mutation
   const mutation = useMutation({ mutationFn: logoutAPI });
-
   //handle logout
-<<<<<<< HEAD
-  const {logout} = useAuth();
-=======
->>>>>>> a913e282adce582f4e8d88cd2f14f01493f44e21
   const handleLogout = () => {
     mutation.mutate();
     logout();

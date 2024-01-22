@@ -14,7 +14,7 @@ const StatusMessage = ({ type, message }) => {
       icon = <AiOutlineCloseCircle className="text-red-500 text-3xl" />;
       colorClass = "bg-red-100 text-red-700";
       break;
-    case "success":
+    case "success": 
       icon = <AiOutlineCheckCircle className="text-green-500 text-3xl" />;
       colorClass = "bg-green-100 text-green-700";
       break;
