@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { getUserProfile } from "../../apis/user/user.api";
 import { useQuery } from "@tanstack/react-query";
-import AuthChecking from "../../alert/authChecking";
+// import AuthChecking from "../../alert/authChecking";
 import StatusMessage from "../../alert/Status.message";
 
 const Dashboard = () => {
@@ -80,7 +80,7 @@ const Dashboard = () => {
               <p className="mb-4">
                 Next Billing Date:{" "}
                 {data?.user?.nextBillingDate
-                  ? data?.user?.nextBillingDate
+                  ? new Date(data?.user?.nextBillingDate).toDateString()
                   : "Not Applicable"}
               </p>
             </div>
