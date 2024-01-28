@@ -59,11 +59,14 @@ export default function Plans() {
     console.log(selectedPlan);
     if (plan.id === "Free") {
       navigate("/free-plan");
-    } else if (plan.id === "Basic") {
-      navigate("/basic");
-    } else if (plan.id === "Premiun") {
-      navigate("/premium");
+    } else{
+      navigate(`/checkout/${plan?.id}?amount=${plan?.amount}`)
     }
+    // else if (plan.id === "Basic") {
+    //   navigate("/basic");
+    // } else if (plan.id === "Premiun") {
+    //   navigate("/premium");
+    // }
   };
 
   return (

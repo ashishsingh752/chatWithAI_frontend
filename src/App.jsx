@@ -5,14 +5,13 @@ import Dashboard from "./components/Users/Dashboard";
 import PublicNavbar from "./components/navbar/Public.navbar";
 import PrivateNavbar from "./components/navbar/Private.navbar";
 import Home from "./components/Pages/Home";
-import Navbar from "./components/Pages/Navbar.jsx";
 import { useAuth } from "./components/Users/Authcontext.jsx";
 import AuthenticatedUser from "./Protected/AuthenticatedUser.jsx";
 import GenerateContent from "./components/Users/ContentGeneration.jsx";
 import Plans from "./components/Pages/Plan.jsx";
 import FreePlanSignup from "./Payment/FreePlan.payment.jsx";
-
-
+import Checkout from "./Payment/Checkout.jsx";
+import VerifiedPayment from "./Payment/VerifiedPayment.jsx";
 
 export default function App() {
   const { isAuthenticated } = useAuth();
@@ -42,8 +41,12 @@ export default function App() {
               </AuthenticatedUser>
             }
           />
-          <Route path="/plans" element={<Plans/>} />
-          <Route path="/free-plan" element={<FreePlanSignup/>} />
+          <Route path="/plans" element={<Plans />} />
+          <Route path="/free-plan" element={<FreePlanSignup />} />
+
+          <Route path="/checkout/:plan" element={<Checkout />} />
+          
+          <Route path="/success" element={<VerifiedPayment />} />
         </Routes>
       </BrowserRouter>
     </>

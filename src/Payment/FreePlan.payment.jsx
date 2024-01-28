@@ -37,7 +37,7 @@ const FreePlanSignup = () => {
           <StatusMessage type="loading" message="Loading Please wait..." />
         )}
         {mutation?.isSuccess && (
-          <StatusMessage type="error" message="Plan has been Upgraded !!!" />
+          <StatusMessage type="success" message="Plan has been Upgraded !!!" />
         )}
 
         <p className="text-center text-gray-600 mb-4">
